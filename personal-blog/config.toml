@@ -1,3 +1,33 @@
-baseURL = "http://example.org/"
-languageCode = "en-us"
-title = "My New Hugo Site"
+# Generic config.
+
+title = "Bartłomiej Szostek"
+baseurl = "http://bsz.co.uk/"
+languageCode = "en-gb"
+copyright = "Copyright &copy; 2020 - Bartłomiej Szostek"
+
+canonifyurls = "true"
+# paginate = 3
+summaryLength = "30"
+enableEmoji = "true"
+
+# Theme configuration.
+
+theme = "hugo-kiera"
+
+pygmentsCodeFences = "true"
+
+[author]
+    name     = "Bartłomiej Szostek"
+    github   = "bartelemi"
+    linkedin = "bartlomiej-szostek"
+
+[params]
+    # favicon = ""
+    tagline = "Personal blog for tech and thoughts."
+    description = "Personal blog for tech and thoughts."
+
+  [[menu.main]]
+      identifier = "tags"
+      name = "Tags"
+      url = "/tags"
+      weight = "1"
