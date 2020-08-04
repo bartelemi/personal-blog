@@ -1,7 +1,7 @@
 # Generic config.
 
 title = "Bartłomiej Szostek"
-baseurl = "http://bsz.co.uk/"
+baseurl = "https://basz.co.uk/"
 languageCode = "en-gb"
 copyright = "Copyright &copy; 2020 - Bartłomiej Szostek"
 
