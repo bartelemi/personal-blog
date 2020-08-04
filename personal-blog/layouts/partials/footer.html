@@ -1,7 +1,8 @@
 </main>
     <footer>
         <h6>
-            {{ .Site.Copyright | markdownify }}
+            {{ .Site.Copyright | markdownify }} |
+            <a href="{{.Site.BaseURL}}index.xml"> {{ T "subscribe" }} </a>
         </h6>
     </footer>
 </div>

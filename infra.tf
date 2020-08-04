@@ -38,10 +38,12 @@ module "cdn" {
   comment                  = "Bartek Szostek personal blog."
   stage                    = "production"
   name                     = "basz-blog"
+  error_document           = "404.html"
+  origin_force_destroy     = true
   compress                 = true
   ipv6_enabled             = true
   logging_enabled          = false
-  minimum_protocol_version = "TLSv1.2_2018"
+  minimum_protocol_version = "TLSv1.2_2019"
   aliases = [
     var.domain,
   ]
@@ -58,6 +60,36 @@ resource "aws_s3_bucket_public_access_block" "origin_bucket_access_block" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+
+# Create Route53 entries pointing at CloudFront distribution.
+
+data "aws_route53_zone" "selected" {
+  name = var.domain
+}
+
+resource "aws_route53_record" "blog_ipv4" {
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = var.domain
+  type    = "A"
+
+  alias {
+    name                   = module.cdn.cf_domain_name
+    zone_id                = module.cdn.cf_hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "blog_ipv6" {
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = var.domain
+  type    = "AAAA"
+
+  alias {
+    name                   = module.cdn.cf_domain_name
+    zone_id                = module.cdn.cf_hosted_zone_id
+    evaluate_target_health = false
+  }
 }
 
 ###############################################################################

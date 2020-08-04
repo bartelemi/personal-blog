@@ -5,10 +5,10 @@ baseurl = "https://basz.co.uk/"
 languageCode = "en-gb"
 copyright = "Copyright &copy; 2020 - Bartłomiej Szostek"
 
-canonifyurls = "true"
-# paginate = 3
+paginate = 5
 summaryLength = "30"
 enableEmoji = "true"
+uglyurls = "true"
 
 # Theme configuration.
 
