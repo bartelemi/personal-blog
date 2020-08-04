@@ -11,26 +11,30 @@ jobs:
         type: string
         description: "Workspace name with build artifacts."
     docker:
-      - image: cibuilds/base
+      - image: cimg/python:3.8
     steps:
       - attach_workspace:
           at: "<< parameters.workspace-name >>"
-      - aws-s3/copy:
-          from: "./"
-          to: "s3://{AWS_S3_BLOG_DOMAIN}/"
+      - aws-s3/sync:
+          from: "./public"
+          to: "s3://${AWS_S3_BLOG_DOMAIN}/"
 
 workflows:
   main:
     jobs:
       - hugo/build:
-          html-proofer: true
-          source: "personal-blog"
-          persist-to-workspace: true
-          destination: "public"
-      - deploy:
-          filters:
+          filters: &tagged
             branches:
               ignore: /.*/
             tags:
+              # Semver patterns - will only build something new if you tag it correctly.
               only: /^\d+\.\d+\.\d+$/
+          html-proofer: true
+          source: "personal-blog"
+          persist-to-workspace: true
+      - deploy:
+          filters:
+            <<: *tagged
+          requires:
+            - hugo/build
           workspace-name: "public"
