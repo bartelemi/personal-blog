@@ -4,3 +4,6 @@
 *.tfstate
 *.tfstate.backup
 *.tfplan
+
+# Build artefacts.
+*/public/

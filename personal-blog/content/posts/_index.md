@@ -1,5 +1,7 @@
-+++
-title = "Posts"
-menu = "main"
-weight = "10"
-+++
+---
+title: "Posts"
+date:  "2020-08-04"
+weight: 10
+meta:  false
+menu:  "main"
+---

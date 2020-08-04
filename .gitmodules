@@ -1,0 +1,3 @@
+[submodule "hugo-kiera"]
+    path = personal-blog/themes/hugo-kiera
+    url = https://github.com/funkydan2/hugo-kiera.git

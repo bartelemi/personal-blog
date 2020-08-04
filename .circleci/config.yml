@@ -7,16 +7,13 @@ orbs:
 jobs:
   deploy:
     parameters:
-      workspace-name:
-        type: string
-        description: "Workspace name with build artifacts."
     docker:
       - image: cimg/python:3.8
     steps:
       - attach_workspace:
-          at: "<< parameters.workspace-name >>"
+          at: "."
       - aws-s3/sync:
-          from: "./public"
+          from: "public"
           to: "s3://${AWS_S3_BLOG_DOMAIN}/"
 
 workflows:
@@ -31,10 +28,8 @@ workflows:
               only: /^\d+\.\d+\.\d+$/
           html-proofer: true
           source: "personal-blog"
-          persist-to-workspace: true
       - deploy:
           filters:
             <<: *tagged
           requires:
             - hugo/build
-          workspace-name: "public"
