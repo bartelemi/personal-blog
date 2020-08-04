@@ -1,0 +1,36 @@
+version: 2.1
+
+orbs:
+  aws-s3: circleci/aws-s3@1.0.16
+  hugo: circleci/hugo@0.6.0
+
+jobs:
+  deploy:
+    parameters:
+      workspace-name:
+        type: string
+        description: "Workspace name with build artifacts."
+    docker:
+      - image: cibuilds/base
+    steps:
+      - attach_workspace:
+          at: "<< parameters.workspace-name >>"
+      - aws-s3/copy:
+          from: "./"
+          to: "s3://{AWS_S3_BLOG_DOMAIN}/"
+
+workflows:
+  main:
+    jobs:
+      - hugo/build:
+          html-proofer: true
+          source: "personal-blog"
+          persist-to-workspace: true
+          destination: "public"
+      - deploy:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+          workspace-name: "public"
