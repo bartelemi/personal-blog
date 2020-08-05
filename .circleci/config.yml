@@ -26,7 +26,7 @@ workflows:
             tags:
               # Semver patterns - will only build something new if you tag it correctly.
               only: /^\d+\.\d+\.\d+$/
-          html-proofer: true
+          html-proofer: false
           source: "personal-blog"
       - deploy:
           filters:
