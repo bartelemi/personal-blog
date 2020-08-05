@@ -38,12 +38,19 @@ module "cdn" {
   comment                  = "Bartek Szostek personal blog."
   stage                    = "production"
   name                     = "basz-blog"
-  error_document           = "404.html"
   origin_force_destroy     = true
   compress                 = true
   ipv6_enabled             = true
   logging_enabled          = false
   minimum_protocol_version = "TLSv1.2_2019"
+  custom_error_response	= [
+    {
+      error_caching_min_ttl = "60"
+      error_code            = "404"
+      response_code         = "404"
+      response_page_path    = "/404.html"
+    }
+  ]
   aliases = [
     var.domain,
   ]
