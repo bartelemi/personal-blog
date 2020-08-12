@@ -29,5 +29,5 @@ pygmentsCodeFences = "true"
   [[menu.main]]
       identifier = "tags"
       name = "Tags"
-      url = "/tags"
+      url = "/tags.html"
       weight = "1"
