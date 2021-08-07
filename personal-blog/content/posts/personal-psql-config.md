@@ -13,19 +13,35 @@ but I usually prefer to default to official software when I have so many choices
 
 ## Customisation
 
-TODO: explain: `\set` vs `set` vs `\pset`.
-You can also print text with `\echo` command.
+Postgres CLI client, the __psql__ can be customised by creating a _.psqlrc_ file in the user's home directory.
+In this section, I will walk you through my personal settings and try to explain them in a clear way.
+
+You will see few different ways of changing the settings, so it's important to understand what each of them does:
+- `\set [name [value [...]]]` -  Sets the __psql__ variable `name` to `value`.
+- `\pset [option [value]]` - This command sets options affecting the output of query result tables.
+- `\setenv name [value]` - Sets the environment variable `name` to `value`, or if the value is not supplied, unsets the environment variable.
+- `set [SESSION | LOCAL] configuration_parameter {TO | =} {value | 'value' | DEFAULT}` - set a __Postgres__ runtime variable.
+
+Additionally, it is also possible to print text with `\echo` command.
+
+Hopefully that will avoid some confusion in the next section. If you still have some doubts, consult the official documentation for psql
+and [Postgres set command](https://www.postgresql.org/docs/current/sql-set.html).
 
 ### Prompt look
 
+Psql uses the `PROMPT[1|2|3]` variables to set the look of the command prompt.
+`PROMPT1` is the default, normal prompt; `PROMPT2` is for multiline input, and `PROMPT3` is used for `COPY FROM STDIN` commands.
+See [prompting](https://www.postgresql.org/docs/current/app-psql.html#APP-PSQL-PROMPTING) for further details.
+
 ```sql
--- Default prompt look: [hostname] @ [database] [connection status] [transaction status] >
+-- [hostname] @ [database] [connection status] [transaction status] >
 \set PROMPT1 '%[%033[1m%]%M %n@%/%R%~%x%[%033[0m%]%> '
--- Multi-line prompt look.
 \set PROMPT2 '[more] %R > '
 ```
 
 ### Query result display
+
+Following settings will result in more verbose query results and error messages. I also like to change the default value of `null` - since most of the console hosts support Unicode characters, nothing should stop you from using a special character like `Ф` or your favourite emoji here. 
 
 ```sql
 \set VERBOSITY verbose
@@ -37,6 +53,12 @@ You can also print text with `\echo` command.
 set intervalstyle to 'postgres_verbose';
 ```
 
+I also customised the look of pager, for the long query results: 
+
+```sql
+\setenv LESS '-iMFXSx4R'
+```
+
 Automatically switch between table/expanded table format.
 
 ```sql
@@ -46,6 +68,9 @@ Automatically switch between table/expanded table format.
 
 ### Transactions behaviour
 
+With the following options, psql will know to stop executing your script on first error and will issue an interactive rollback, by creating an implicit SAVEPOINT.
+This setting is somewhat similar to `set -e` in bash scripts.
+
 ```sql
 \set ON_ERROR_STOP on
 \set ON_ERROR_ROLLBACK interactive
@@ -53,14 +78,20 @@ Automatically switch between table/expanded table format.
 
 ### Command history
 
+Psql also lets you customise the way it stores the command history.
+I've set mine to ignore duplicate commands (keeps history file lean),
+and store commands issued against different databases in separate files.
+
+Second setting is quite useful if you're developing multiple db schemas, with unique tables/namespaces. However, if you're a db admin and you run same or similar queries against different databases, you might want to omit this customisation.
+
 ```sql
--- Ignore duplicate entries if the same command was run more than once.
 \set HISTCONTROL ignoredups
--- Use a sepearate history file for each database.
 \set HISTFILE ~/.psql_history- :DBNAME
 ```
 
 ### Aliases
+
+Lastly, you can define aliases for common SQL queries. You run an aliased query by typing `:alias` in the CLI. Here are some of my simple aliases:   
 
 ```sql
 -- > :version -- gives psql version output
@@ -90,7 +121,7 @@ Automatically switch between table/expanded table format.
 -- Set app name.
 set application_name to 'me@psql';
 
--- Default prompt look: [hostname] @ [database] [conn status] [transaction status] >
+-- Default prompt look: [hostname] @ [database] [connection status] [transaction status] >
 \set PROMPT1 '%[%033[1m%]%M %n@%/%R%~%x%[%033[0m%]%> '
 -- Multi-line prompt look.
 \set PROMPT2 '[more] %R > '
