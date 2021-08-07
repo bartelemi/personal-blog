@@ -7,3 +7,6 @@
 
 # Build artefacts.
 */public/
+
+# IDE
+.vscode/*
